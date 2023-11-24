@@ -1,13 +1,19 @@
 version: '3'
 services:
-    rabbitmq:
-      image: rabbitmq:3-management
-      container_name: rabbitmq
-      ports:
-        - "5672:5672"
-        - "15672:15672"
-      environment:
-        RABBITMQ_DEFAULT_USER: rabbitmq
-        RABBITMQ_DEFAULT_PASS: rabbitmq
-      volumes:
-        - "./rabbitmq_data:/var/lib/rabbitmq"
+  mailhog:
+    image: mailhog/mailhog
+    networks:
+      - mon_reseau
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+  tp-app-consummer:
+    build: .
+    networks:
+      - mon_reseau
+    depends_on:
+      - mailhog
+
+networks:
+  mon_reseau:
+    external: true
